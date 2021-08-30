@@ -1,12 +1,12 @@
 '''
 Author: Amine Trabelsi
 
-current status: Not tested yet
+current status: Not working yet
 
 
 '''
 
-from pytube import YouTube
+from pytube import YouTube, request 
 from tkinter import *
 from tkinter import ttk
 from os import path, environ
@@ -94,10 +94,12 @@ def buttoncommand():
 		VideoName = VideoName.replace(" ","-").replace("/","-").replace("|","-")
 		print("URL checked")
 		global streamqvideos
-		streamqvideos = [stream.resolution for stream in link.streams.filter(adaptive=True).filter(file_extension='mp4').all()]
+		streamqvideos = [stream.resolution for stream in link.streams.filter(adaptive=True).filter(file_extension='mp4')]
 		streamqvideos[:] = (value for value in streamqvideos if value != None)
 		streamqvideos = [ii for n,ii in enumerate(streamqvideos) if ii not in streamqvideos[:n]]
+		# streams available
 		print(streamqvideos)
+		#
 		def PPF(x):
 			x.start(10)
 		PP = Process(target=PPF(P))
@@ -113,20 +115,25 @@ def buttoncommand():
 		global video
 		video = link.streams.filter(adaptive=True).filter(file_extension='mp4').filter(res=ress).first()
 		print(video)
-		file_size = video.size
-		file_size = eval(file_size.replace("x","*"))
-		print("file size: {}".format(file_size))
+		# find video size
+		file_size = video.filesize / (1e6)
+		print("video size: {} MB".format(file_size))
+		#
 		Vid = Process(target=DV,args=[video,])
 		Vid.start()
 		audio = link.streams.filter(only_audio=True).first()
 		print(audio)
+		# find audio size
+		file_size = audio.filesize / (1e6)
+		print("video size: {} MB".format(file_size))
+		#
 		AUD = Process(target=DA,args=[audio,])
 		AUD.start()
 		Vid.join()
 		AUD.join()
 		N = "{}.mp4".format(VideoName)
-		M = "\\ffmpeg\\bin\\ffmpeg.exe -i video.mp4 -i audio.mp4 -c copy {}".format(N)
-		Del = "Erase audio.mp4 video.mp4"
+		M = "\\ffmpeg\\bin\\ffmpeg.exe -i video -i audio -c copy {}".format(N)
+		Del = "Erase audio video"
 		subprocess.call(M, shell=True)
 		subprocess.call(Del, shell=True)
 		print("Merged and deleted")
@@ -143,6 +150,8 @@ def buttoncommand():
 		print(e)
 		messagebox.showerror("Error", "Something Went Wrong\n"
 			 "\nPlease check your internet and try again")
+		Del = "Erase audio video"
+		subprocess.call(Del, shell=True)
 
 def Main():
 	global master

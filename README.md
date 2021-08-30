@@ -1,11 +1,12 @@
 # Python3-Youtube-Downloader
-Python3 Program to download video(Dash-Streams) from Youtube
+Python3 Program to download high quality videos(Dash-Streams) from Youtube
 
-## Built with:
+## Python libraries required :
 * multiprocessing
 * pytube 
 * Tkinter
-* ffmpeg
+## Other requirements :
+* ffmpeg (for merging audio and video)
 
 ## Author
 * **Amine Trabelsi**

@@ -1,7 +1,9 @@
 '''
 Author: Amine Trabelsi
 
-current status: Not working yet
+current status: 
+	* Download works well: no errors yet
+	* progress bar not stopping after one download
 
 
 '''
